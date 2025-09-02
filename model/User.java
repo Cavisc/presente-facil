@@ -4,6 +4,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 
 import util.Encryption;
 
@@ -24,8 +26,8 @@ public class User implements Generic  {
         this.secretAnswer = "";
     }
 
-    public User(int id, String name, String email, String hashPassword, String secretQuestion, String secretAnswer) {
-        this.id = id;
+    public User(String name, String email, String hashPassword, String secretQuestion, String secretAnswer) {
+        // Implementar ID automático com DAO
         this.name = name;
         this.email = email;
         this.hashPassword = hashPassword;
@@ -83,7 +85,7 @@ public class User implements Generic  {
         return this.secretAnswer;
     }   
 
-    public boolean validatePassword(String password) {
+    public boolean validatePassword(String password) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         return Encryption.validatePassword(password, this.hashPassword);
     }
 
