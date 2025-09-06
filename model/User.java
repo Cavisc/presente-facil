@@ -18,16 +18,15 @@ public class User implements Generic  {
     private String secretAnswer;
 
     public User() {
-        this.id = -1;
-        this.name = "";
-        this.email = "";
-        this.hashPassword = "";
-        this.secretQuestion = "";
-        this.secretAnswer = "";
+        this(-1, "", "", "", "", "");
     }
 
     public User(String name, String email, String hashPassword, String secretQuestion, String secretAnswer) {
-        // Implementar ID automático com DAO
+        this(-1, name, email, hashPassword, secretQuestion, secretAnswer);
+    }
+
+    public User(int id, String name, String email, String hashPassword, String secretQuestion, String secretAnswer) {
+        this.id = id;
         this.name = name;
         this.email = email;
         this.hashPassword = hashPassword;
@@ -93,19 +92,22 @@ public class User implements Generic  {
     public byte[] toByteArray() throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         DataOutputStream dos = new DataOutputStream(baos);
+
         dos.writeInt(this.id);
         dos.writeUTF(this.name);
         dos.writeUTF(this.email);
         dos.writeUTF(this.hashPassword);
         dos.writeUTF(this.secretQuestion);
         dos.writeUTF(this.secretAnswer);
+
         return baos.toByteArray();
     }
 
     @Override
-    public void fromByteArray(byte[] ba) throws Exception {
-        ByteArrayInputStream bais = new ByteArrayInputStream(ba);
+    public void fromByteArray(byte[] bytes) throws Exception {
+        ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
         DataInputStream dis = new DataInputStream(bais);
+        
         this.id = dis.readInt();
         this.name = dis.readUTF();
         this.email = dis.readUTF();

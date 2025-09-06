@@ -2,7 +2,7 @@
 **Um sistema para gestão de listas de sugestões de presentes**
 
 ### 👨‍💻 Autores:
-**Alexandre**
+**Alexandre Augusto Niess Ferreira**
 
 **Carlos Vinícius de Souza Coelho**
 

@@ -1,19 +1,16 @@
 package view;
 
+import util.CleanTerminal;
 import util.InputScanner;
 
 public class LoginView {
-    public void displayHeader() {
-        System.out.println("PresenteFácil 1.0");
-        System.out.println("-----------------");
-    }
-
+    
     public void displayBreadcrumb(String location) {
         System.out.println("> " + location + "\n");
     }
 
     public String displayInitialMenu() {
-        displayHeader();
+        CleanTerminal.clean();
         System.out.println("\n(1) Login");
         System.out.println("(2) Novo usuário\n");
         System.out.println("(S) Sair\n");

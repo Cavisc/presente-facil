@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 
 import model.User;
+import util.CleanTerminal;
 import util.Encryption;
 import view.LoginView;
 
@@ -11,7 +12,7 @@ public class LoginController {
     public void login() {
         LoginView loginView = new LoginView();
         
-        loginView.displayHeader();
+        CleanTerminal.clean();
         loginView.displayBreadcrumb("Login");
 
         String email = loginView.displayLoginMenuEmail();
@@ -21,7 +22,7 @@ public class LoginController {
     public void register() throws NoSuchAlgorithmException, UnsupportedEncodingException {
         LoginView loginView = new LoginView();
 
-        loginView.displayHeader();
+        CleanTerminal.clean();
         loginView.displayBreadcrumb("Cadastro");
 
         String name = loginView.displayLoginMenuName();

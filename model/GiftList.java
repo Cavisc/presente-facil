@@ -103,6 +103,7 @@ public class GiftList implements Generic {
     public byte[] toByteArray() throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         DataOutputStream dos = new DataOutputStream(baos);
+        
         dos.writeInt(this.id);
         dos.writeInt(this.userId);
         dos.writeUTF(this.name);
@@ -124,9 +125,10 @@ public class GiftList implements Generic {
     }
 
     @Override
-    public void fromByteArray(byte[] ba) throws Exception {
-        ByteArrayInputStream bais = new ByteArrayInputStream(ba);
+    public void fromByteArray(byte[] bytes) throws Exception {
+        ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
         DataInputStream dis = new DataInputStream(bais);
+
         this.id = dis.readInt();
         this.userId = dis.readInt();
         this.name = dis.readUTF();
