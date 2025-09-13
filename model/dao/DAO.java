@@ -4,7 +4,7 @@ import java.io.RandomAccessFile;
 import java.lang.reflect.Constructor;
 
 import model.indexes.ExtensibleHashTable;
-import model.indexes.pairs.PairIdAddress;
+import model.indexes.pairs.direct.PairIdAddress;
 
 public class DAO <T extends model.Generic> {
     Constructor<T> constructor;

@@ -1,4 +1,4 @@
-package model.indexes.pairs;
+package model.indexes.pairs.direct;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
