@@ -43,6 +43,11 @@ public class PairNanoIdId implements GenericExtensibleHashTable {
         return Math.abs(this.nanoId.hashCode());
     }
 
+    public static int hashCode(String nanoId) throws Exception {
+        if (nanoId.length() != 10) throw new Exception("Nano ID inválido! Deve conter exatamente 10 caracteres.");
+        return Math.abs(nanoId.hashCode());
+    }
+
     @Override
     public String toString() {
         return "(" + this.nanoId + ";" + this.id + ")";

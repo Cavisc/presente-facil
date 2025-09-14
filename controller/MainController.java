@@ -1,12 +1,10 @@
 package controller;
 
-import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
-
+import model.User;
 import view.LoginView;
 
 public class MainController {
-    public void start() throws NoSuchAlgorithmException, UnsupportedEncodingException {
+    public void start() throws Exception {
         boolean running = true;
 
         while (running) {
@@ -17,7 +15,17 @@ public class MainController {
 
             switch (option) {
                 case "1":
-                    loginController.login();
+                    User userLogged = loginController.login();
+
+                    switch (userLogged.getId()) {
+                        case -1:
+                            break;
+                        default:
+                            UserController userController = new UserController(userLogged);
+                            userController.home();
+                            break;
+                    }
+
                     break;
                 case "2":
                     loginController.register();

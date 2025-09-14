@@ -4,29 +4,23 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 
 import model.indexes.GenericExtensibleHashTable;
 
 public class PairEmailId implements GenericExtensibleHashTable {
     private String email;
     private int id;
-    private final short sizeInBytes = 44;   
-    
-    public PairEmailId() throws Exception {
-        this("", -1);
+    private final short sizeInBytes = 44;   // 40 bytes para email + 4 bytes para ID
+
+    public PairEmailId() {
+        this.email = "";
+        this.id = -1;
     }
 
-    public PairEmailId(String email) throws Exception {
-        this(email, -1);
-    }
-
-    public PairEmailId(String email, int id) throws Exception {
-        if (email.length() == 0 || email.length() <= 40) {
-            this.email = email;
-            this.id = id;
-        } else {
-            throw new Exception("Email inválido! Deve conter no máximo 40 caracteres.");
-        }
+    public PairEmailId(String email, int id) {
+        this.email = email;
+        this.id = id;
     }
 
     public short size() {
@@ -48,32 +42,63 @@ public class PairEmailId implements GenericExtensibleHashTable {
 
     @Override
     public String toString() {
-        return "(" + this.email + ";" + this.id + ")";
+        return "PairEmailId{email='" + email + "', id=" + id + "}";
     }
 
-    public byte[] toByteArray() throws Exception {
+    public byte[] toByteArray() throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         DataOutputStream dos = new DataOutputStream(baos);
 
-        if (email.length() == 0 || email.length() > 40) throw new Exception("Email inválido! Deve conter no máximo 40 caracteres.");
+        // Garantir que o email não seja nulo
+        if (email == null) {
+            email = "";
+        }
 
-        byte[] bytes = new byte[40];
-        bytes = email.getBytes();
-        
-        dos.write(bytes);
-        dos.writeInt(this.id);
+        // Converter o email para bytes com tamanho fixo de 40 bytes
+        byte[] emailBytes = email.getBytes("UTF-8");
+        if (emailBytes.length > 40) {
+            throw new IOException("Email muito longo! Máximo 40 bytes.");
+        }
+
+        // Criar array de 40 bytes e preencher com zeros
+        byte[] fixedEmailBytes = new byte[40];
+        System.arraycopy(emailBytes, 0, fixedEmailBytes, 0, emailBytes.length);
+
+        // Escrever os bytes fixos do email e o ID
+        dos.write(fixedEmailBytes);
+        dos.writeInt(id);
 
         return baos.toByteArray();
     }
 
-    public void fromByteArray(byte[] bytes) throws Exception {
+    public void fromByteArray(byte[] bytes) throws IOException {
+        if (bytes.length != sizeInBytes) {
+            throw new IOException("Tamanho de bytes inválido. Esperado: " + sizeInBytes + ", Recebido: " + bytes.length);
+        }
+
         ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
         DataInputStream dis = new DataInputStream(bais);
 
+        // Ler os 40 bytes do email
         byte[] emailBytes = new byte[40];
-        dis.read(emailBytes);
-
-        this.email = new String(emailBytes).trim();
+        dis.readFully(emailBytes);
+        
+        // Converter para string e remover caracteres nulos/espaços extras
+        this.email = new String(emailBytes, "UTF-8").trim();
+        
+        // Ler o ID
         this.id = dis.readInt();
+    }
+
+    public static int hashCode(String email) {
+        return Math.abs(email.hashCode());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        PairEmailId that = (PairEmailId) obj;
+        return id == that.id && email.equals(that.email);
     }
 }

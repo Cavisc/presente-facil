@@ -23,6 +23,14 @@ public class PairIdId implements model.indexes.GenericBPlusTree<PairIdId> {
         this.idAggregate = idAggregate;
     }
 
+    public int getIdAggregator() {
+        return this.idAggregator;
+    }
+
+    public int getIdAggregate() {
+        return this.idAggregate;
+    }
+
     public short size() {
         return this.sizeInBytes;
     }
