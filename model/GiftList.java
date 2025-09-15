@@ -17,17 +17,15 @@ public class GiftList implements Generic {
     private LocalDate limitDate;
     private String shareableCode;
 
-    GiftList() {
-        this.id = -1;
-        this.userId = -1;
-        this.name = "";
-        this.description = "";
-        this.creationDate = null;
-        this.limitDate = null;
-        this.shareableCode = "";
+    public GiftList() {
+        this(-1, -1, "", "", null);
     }
 
-    GiftList(int id, int userId, String name, String description, LocalDate limitDate) {
+    public GiftList(int userId, String name, String description, LocalDate limitDate) {
+        this(-1, userId, name, description, limitDate);
+    }
+
+    public GiftList(int id, int userId, String name, String description, LocalDate limitDate) {
         this.id = id;
         this.userId = userId;
         this.name = name;

@@ -14,7 +14,7 @@ public class MainController {
             String option = loginView.displayInitialMenu();
 
             switch (option) {
-                case "1":
+                case "1": // Login
                     User userLogged = loginController.login();
 
                     switch (userLogged.getId()) {
@@ -22,18 +22,19 @@ public class MainController {
                             break;
                         default:
                             UserController userController = new UserController(userLogged);
-                            userController.home();
-                            break;
+                            boolean isLogged = userController.home();
+
+                            if (!isLogged) break;
                     }
 
                     break;
-                case "2":
+                case "2": // Novo usuário
                     loginController.register();
                     break;
-                case "S":
+                case "S": // Sair
                     running = false;
                     break;
-                default:
+                default: // Mostra menu inicial novamente
                     break;
             }
         }

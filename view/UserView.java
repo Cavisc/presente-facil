@@ -45,7 +45,17 @@ public class UserView {
         return option;
     }
 
-    public String displayLoginMenuName() {
+    public String displayConfirmationToDeleteUser() {
+        displayHeader();
+        displayBreadcrumb(" > Meus dados > Excluir conta");
+        System.out.print("Tem certeza que deseja excluir sua conta? (S/N): ");
+
+        String option = InputScanner.getScanner().nextLine().toUpperCase();
+
+        return option;
+    }
+
+    public String displayLoginInputName() {
         System.out.print("Nome: ");
 
         String input = InputScanner.getScanner().nextLine();
@@ -53,7 +63,7 @@ public class UserView {
         return input;
     }
 
-    public String displayLoginMenuEmail() {
+    public String displayLoginInputEmail() {
         System.out.print("Email: ");
 
         String input = InputScanner.getScanner().nextLine();
@@ -61,7 +71,7 @@ public class UserView {
         return input;
     }
 
-    public String displayLoginMenuOldPassword() {
+    public String displayLoginInputOldPassword() {
         System.out.print("Senha antiga: ");
 
         String input = InputScanner.getScanner().nextLine();
@@ -69,7 +79,7 @@ public class UserView {
         return input;
     }
 
-    public String displayLoginMenuNewPassword() {
+    public String displayLoginInputNewPassword() {
         System.out.print("Senha nova: ");
 
         String input = InputScanner.getScanner().nextLine();
@@ -77,7 +87,7 @@ public class UserView {
         return input;
     }
 
-    public String displayLoginMenuQuestion() {
+    public String displayLoginInputQuestion() {
         System.out.print("Pergunta secreta: ");
 
         String input = InputScanner.getScanner().nextLine();
@@ -85,7 +95,7 @@ public class UserView {
         return input;
     }
 
-    public String displayLoginMenuAnswer() {
+    public String displayLoginInputAnswer() {
         System.out.print("Resposta secreta: ");
 
         String input = InputScanner.getScanner().nextLine();

@@ -1,9 +1,6 @@
 package controller;
 
-import java.io.IOException;
-
 import model.User;
-import model.dao.GiftListDAO;
 import model.dao.UserDAO;
 import util.Encryption;
 import view.UserView;
@@ -16,12 +13,12 @@ public class UserController {
 
     UserController(User user) throws Exception {
         this.user = user;
-        // this.giftListController = new GiftListController(this.userId);
         this.userDAO = new UserDAO();
         this.userView = new UserView();
+        this.giftListController = new GiftListController(this.user.getId());
     }
 
-    public void home() throws Exception {
+    public boolean home() throws Exception {
         UserView.displayHeader();
         userView.displayBreadcrumb("");
 
@@ -39,9 +36,9 @@ public class UserController {
                                 UserView.displayHeader();
                                 userView.displayBreadcrumb(" > Meus dados > Editar dados");
 
-                                String name = userView.displayLoginMenuName();
-                                String email = userView.displayLoginMenuEmail();
-                                String oldPassword = userView.displayLoginMenuOldPassword();
+                                String name = userView.displayLoginInputName();
+                                String email = userView.displayLoginInputEmail();
+                                String oldPassword = userView.displayLoginInputOldPassword();
                                 String encryptedOldPassword = Encryption.encryptPassword(oldPassword);
                                 
                                 if (user.getHashPassword().compareTo(encryptedOldPassword) != 0) {
@@ -54,9 +51,9 @@ public class UserController {
                                     break;
                                 }
                                 else {
-                                    String newPassword = userView.displayLoginMenuNewPassword();
-                                    String question = userView.displayLoginMenuQuestion();
-                                    String answer = userView.displayLoginMenuAnswer();
+                                    String newPassword = userView.displayLoginInputNewPassword();
+                                    String question = userView.displayLoginInputQuestion();
+                                    String answer = userView.displayLoginInputAnswer();
 
                                     User updatedUser = new User(this.user.getId(), name, email, Encryption.encryptPassword(newPassword), question, answer);
                                     if (this.userDAO.update(updatedUser)) {
@@ -81,7 +78,28 @@ public class UserController {
 
                                 break;
                             case "2": // > Excluir conta
-                            
+                                option = userView.displayConfirmationToDeleteUser();
+                                if (option.compareTo("S") == 0) {
+                                    if (this.userDAO.delete(this.user.getId())) {
+                                        UserView.displayHeader();
+                                        userView.displayBreadcrumb(" > Meus dados > Excluir conta");
+                                        userView.displayMessage("Conta excluída com sucesso! \nPressione ENTER para continuar...");
+                                        System.in.read();
+
+                                        return false;
+                                    }
+                                    else {
+                                        UserView.displayHeader();
+                                        userView.displayBreadcrumb(" > Meus dados > Excluir conta");
+                                        userView.displayMessage("Erro ao excluir a conta! Você possui listas de presentes associadas." + 
+                                                                "\nExclua estas listas antes de excluir sua conta! \nPressione ENTER para continuar...");
+                                        System.in.read();
+
+                                        option = "1";
+                                    }
+                                }
+                                else option = "1";
+
                                 break;
                             case "R": // Retornar para '> Meus dados'
                                 break;
@@ -92,13 +110,15 @@ public class UserController {
 
                     break;    
                 case "2": // > Minhas listas
+                    giftListController.home();
                     break;
                 case "3": // > Produtos
                     break;
                 case "4": // > Buscar lista
+                    giftListController.findList();
                     break;
                 case "S": // Sair
-                    break;
+                    return false;
                 default: // Mostra '> Inicio' novamente
                     break;
             }
@@ -107,5 +127,7 @@ public class UserController {
             userView.displayBreadcrumb("");
             option = userView.displayInitialMenu();
         }
+
+        return true;
     }
 }
