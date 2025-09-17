@@ -15,7 +15,7 @@ public class UserView {
     public String displayInitialMenu() {
         System.out.println("(1) Meus dados");
         System.out.println("(2) Minhas listas");
-        System.out.println("(3) Produtos");
+        System.out.println("(3) Produtos [TP2]");
         System.out.println("(4) Buscar lista\n");
         System.out.println("(S) Sair\n");
 

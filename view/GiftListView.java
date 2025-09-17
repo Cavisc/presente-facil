@@ -61,7 +61,7 @@ public class GiftListView {
     }
 
     public String displayGiftListInputShareableCode() {
-        System.out.println("O código é composto por 10 dígitos!\n");
+        System.out.println("Digite o código da lista (10 caracteres)\n");
         System.out.println("(R) Retornar ao menu anterior\n");
 
         System.out.print("Código: ");
@@ -80,7 +80,7 @@ public class GiftListView {
     }
 
     public String displayGiftListMenu() {
-        System.out.println("\n(1) Gerenciar produtos da lista");
+        System.out.println("\n(1) Gerenciar produtos da lista [TP2]");
         System.out.println("(2) Alterar dados da lista");
         System.out.println("(3) Excluir lista\n");
         System.out.println("(R) Retornar ao menu anterior\n");
@@ -95,7 +95,7 @@ public class GiftListView {
     public String displayConfirmationToDeleteGiftList(String name) {
         displayHeader();
         displayBreadcrumb(" > " + name + " > Excluir lista");
-        System.out.print("Tem certeza que deseja excluir a lista" + name + "? (S/N): ");
+        System.out.print("Tem certeza que deseja excluir a lista " + name + "? (S/N): ");
 
         String option = InputScanner.getScanner().nextLine().toUpperCase();
 
