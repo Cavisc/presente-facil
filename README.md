@@ -8,7 +8,7 @@
 
 **Lucas Araujo Barduino Rodrigues**
 
-**Marcos Paulo**
+**Marcos Paulo Miranda Pereira**
 
 Este projeto foi desenvolvido como parte do Trabalho Prático 1 (TP1) da disciplina de AED3, utilizando conceitos de persistência em arquivos, indexação com Árvore B+, e arquitetura MVC. O trabalho teve como objetivo a implementação de um sistema de gestão de listas de presentes, no qual usuários podem se cadastrar e criar listas de sugestões de presentes para diferentes ocasiões (aniversário, natal, casamento etc.).
 
