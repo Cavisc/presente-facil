@@ -7,7 +7,7 @@ import java.io.DataOutputStream;
 
 public class ProductGiftList implements Generic {
     private int id;
-    private int listId;
+    private int giftListId;
     private int productId;
     private byte quantity;
     private String observation;
@@ -16,13 +16,13 @@ public class ProductGiftList implements Generic {
         this(-1, -1, -1, (byte)-1, "");
     }
 
-    public ProductGiftList(int listId, int productId, byte quantity, String observation) {
-        this(-1, listId, productId, quantity, observation);
+    public ProductGiftList(int giftListId, int productId, byte quantity, String observation) {
+        this(-1, giftListId, productId, quantity, observation);
     }
 
-    public ProductGiftList(int id, int listId, int productId, byte quantity, String observation) {
+    public ProductGiftList(int id, int giftListId, int productId, byte quantity, String observation) {
         this.id = id;
-        this.listId = listId;
+        this.giftListId = giftListId;
         this.productId = productId;
         this.quantity = quantity;
         this.observation = observation;
@@ -38,12 +38,12 @@ public class ProductGiftList implements Generic {
         return this.id;
     }
 
-    public void setListId(int listId) {
-        this.listId = listId;
+    public void setGiftListId(int giftListId) {
+        this.giftListId = giftListId;
     }
 
-    public int getListId() {
-        return this.listId;
+    public int getGiftListId() {
+        return this.giftListId;
     }
 
     public void setProductId(int productId) {
@@ -76,7 +76,7 @@ public class ProductGiftList implements Generic {
         DataOutputStream dos = new DataOutputStream(baos);
 
         dos.writeInt(this.id);
-        dos.writeInt(this.listId);
+        dos.writeInt(this.giftListId);
         dos.writeInt(this.productId);
         dos.writeByte(this.quantity);
 
@@ -98,7 +98,7 @@ public class ProductGiftList implements Generic {
         DataInputStream dis = new DataInputStream(bais);
         
         this.id = dis.readInt();
-        this.listId = dis.readInt();
+        this.giftListId = dis.readInt();
         this.productId = dis.readInt();
         this.quantity = dis.readByte();
 
