@@ -1,66 +1,112 @@
+// Caminho: model/dao/ProductDAO.java (VERSÃO CORRETA)
 package model.dao;
 
+import java.io.RandomAccessFile;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import model.Product;
-import model.indexes.ExtensibleHashTable;
-import model.indexes.pairs.indirect.PairGtinId;
+import model.indexes.BPlusTree;
+import model.indexes.pairs.indirect.PairProductNameId;
 
 public class ProductDAO extends DAO<Product> {
-  ExtensibleHashTable<PairGtinId> indirectIndexGtinId;
+
+  private BPlusTree<PairProductNameId> indexName;
 
   public ProductDAO() throws Exception {
     super("product", Product.class.getConstructor());
-    this.indirectIndexGtinId = new ExtensibleHashTable<>(PairGtinId.class.getConstructor(), 3,
-        "./data/product.gtin.d.db", "./data/product.gtin.c.db");
+    indexName = new BPlusTree<>(PairProductNameId.class.getConstructor(), 4, "./data/product.name.db");
   }
 
+  @Override
   public int create(Product product) throws Exception {
+    if (readByGtin13(product.getGtin13()) != null) {
+      throw new Exception("Falha ao inserir produto: GTIN-13 '" + product.getGtin13() + "' já existe.");
+    }
     int id = super.create(product);
-    this.indirectIndexGtinId.create(new PairGtinId(product.getGtin(), id));
-
+    product.setId(id);
+    indexName.create(new PairProductNameId(product.getName(), id));
     return id;
   }
 
-  public Product readByGtin(String gtin) throws Exception {
-    PairGtinId pgi = this.indirectIndexGtinId.read(PairGtinId.hashCode(gtin));
-
-    if (pgi == null)
+  public Product readByGtin13(String gtin13) throws Exception {
+    RandomAccessFile raf = new RandomAccessFile("./data/" + this.fileName + ".db", "r");
+    if (raf.length() <= HEADER_SIZE) {
+      raf.close();
       return null;
-    int id = pgi.getId();
-
-    return super.read(id);
+    }
+    raf.seek(HEADER_SIZE);
+    while (raf.getFilePointer() < raf.length()) {
+      raf.readByte(); // Tombstone
+      short size = raf.readShort();
+      byte[] data = new byte[size];
+      raf.read(data);
+      Product p = this.constructor.newInstance();
+      p.fromByteArray(data);
+      if (p.getGtin13().equals(gtin13)) {
+        raf.close();
+        return p;
+      }
+    }
+    raf.close();
+    return null;
   }
 
+  public List<Product> readAll() throws Exception {
+    List<Product> products = new ArrayList<>();
+    RandomAccessFile raf = new RandomAccessFile("./data/" + this.fileName + ".db", "r");
+    if (raf.length() <= HEADER_SIZE) {
+      raf.close();
+      return products;
+    }
+    raf.seek(HEADER_SIZE);
+    while (raf.getFilePointer() < raf.length()) {
+      byte tombstone = raf.readByte();
+      short size = raf.readShort();
+      byte[] data = new byte[size];
+      raf.read(data);
+      if (tombstone == ' ') {
+        Product p = this.constructor.newInstance();
+        p.fromByteArray(data);
+        products.add(p);
+      }
+    }
+    raf.close();
+    Collections.sort(products, Comparator.comparing(Product::getName));
+    return products;
+  }
+
+  @Override
   public boolean update(Product newProduct) throws Exception {
     Product oldProduct = super.read(newProduct.getId());
-    String oldGtin = oldProduct.getGtin();
-
-    if (super.update(newProduct)) {
-      if (newProduct.getGtin().compareTo(oldGtin) != 0) {
-        this.indirectIndexGtinId.delete(PairGtinId.hashCode(oldGtin));
-        this.indirectIndexGtinId.create(new PairGtinId(newProduct.getGtin(), newProduct.getId()));
-      }
-
-      return true;
-    } else
+    if (oldProduct == null)
       return false;
+    if (!oldProduct.getGtin13().equals(newProduct.getGtin13())) {
+      if (readByGtin13(newProduct.getGtin13()) != null) {
+        throw new Exception(
+            "Falha ao atualizar: GTIN-13 '" + newProduct.getGtin13() + "' já pertence a outro produto.");
+      }
+    }
+    if (super.update(newProduct)) {
+      if (!oldProduct.getName().equals(newProduct.getName())) {
+        indexName.delete(new PairProductNameId(oldProduct.getName(), oldProduct.getId()));
+        indexName.create(new PairProductNameId(newProduct.getName(), newProduct.getId()));
+      }
+      return true;
+    }
+    return false;
   }
 
   @Override
   public boolean delete(int id) throws Exception {
     Product product = super.read(id);
-
     if (product == null)
       return false;
-
-    ProductGiftListDAO productGiftListDAO = new ProductGiftListDAO();
-
-    if (productGiftListDAO.readByProductId(id).length == 0 && super.delete(id)) {
-      this.indirectIndexGtinId.delete(PairGtinId.hashCode(product.getGtin()));
+    if (super.delete(id)) {
+      indexName.delete(new PairProductNameId(product.getName(), id));
       return true;
-    } else {
-      return productGiftListDAO.deleteByProductId(id)
-          && super.delete(id)
-          && this.indirectIndexGtinId.delete(PairGtinId.hashCode(product.getGtin()));
     }
+    return false;
   }
 }

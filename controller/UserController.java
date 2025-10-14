@@ -5,8 +5,6 @@ import model.User;
 import model.dao.UserDAO;
 import util.Encryption;
 import view.UserView;
-// IMPORTAÇÃO ADICIONADA
-import controller.ProductController;
 
 public class UserController {
     private GiftListController giftListController;
@@ -30,13 +28,15 @@ public class UserController {
         while (option.compareTo("S") != 0) {
             switch (option) {
                 case "1": // > Meus dados
-                    // Criei uma variável local para o loop interno para não confundir com o loop principal
-                    String subOption = " "; 
+                    // Criei uma variável local para o loop interno para não confundir com o loop
+                    // principal
+                    String subOption = " ";
                     while (subOption.compareTo("R") != 0) {
                         UserView.displayHeader(); // Adicionado para redesenhar o cabeçalho
                         userView.displayBreadcrumb(" > Meus dados"); // Adicionado para redesenhar o breadcrumb
-                        subOption = userView.displayUserDataMenu(this.user.getName(), this.user.getEmail(), this.user.getSecretQuestion(), this.user.getSecretAnswer());
-                    
+                        subOption = userView.displayUserDataMenu(this.user.getName(), this.user.getEmail(),
+                                this.user.getSecretQuestion(), this.user.getSecretAnswer());
+
                         switch (subOption) {
                             case "1": // > Editar dados
                                 UserView.displayHeader();
@@ -46,7 +46,7 @@ public class UserController {
                                 String email = userView.displayLoginInputEmail();
                                 String oldPassword = userView.displayLoginInputOldPassword();
                                 String encryptedOldPassword = Encryption.encryptPassword(oldPassword);
-                                
+
                                 if (user.getHashPassword().compareTo(encryptedOldPassword) != 0) {
                                     UserView.displayHeader();
                                     userView.displayBreadcrumb(" > Meus dados > Editar dados");
@@ -57,17 +57,20 @@ public class UserController {
                                     String question = userView.displayLoginInputQuestion();
                                     String answer = userView.displayLoginInputAnswer();
 
-                                    User updatedUser = new User(this.user.getId(), name, email, Encryption.encryptPassword(newPassword), question, answer);
+                                    User updatedUser = new User(this.user.getId(), name, email,
+                                            Encryption.encryptPassword(newPassword), question, answer);
                                     if (this.userDAO.update(updatedUser)) {
                                         this.user = updatedUser;
                                         UserView.displayHeader();
                                         userView.displayBreadcrumb(" > Meus dados > Editar dados");
-                                        userView.displayMessage("Dados atualizados com sucesso! \nPressione ENTER para continuar...");
+                                        userView.displayMessage(
+                                                "Dados atualizados com sucesso! \nPressione ENTER para continuar...");
                                         System.in.read();
                                     } else {
                                         UserView.displayHeader();
                                         userView.displayBreadcrumb(" > Meus dados > Editar dados");
-                                        userView.displayMessage("Erro ao atualizar os dados! \nPressione ENTER para continuar...");
+                                        userView.displayMessage(
+                                                "Erro ao atualizar os dados! \nPressione ENTER para continuar...");
                                         System.in.read();
                                     }
                                 }
@@ -78,14 +81,16 @@ public class UserController {
                                     if (this.userDAO.delete(this.user.getId())) {
                                         UserView.displayHeader();
                                         userView.displayBreadcrumb(" > Meus dados > Excluir conta");
-                                        userView.displayMessage("Conta excluída com sucesso! \nPressione ENTER para continuar...");
+                                        userView.displayMessage(
+                                                "Conta excluída com sucesso! \nPressione ENTER para continuar...");
                                         System.in.read();
                                         return false; // Sai do sistema
                                     } else {
                                         UserView.displayHeader();
                                         userView.displayBreadcrumb(" > Meus dados > Excluir conta");
-                                        userView.displayMessage("Erro ao excluir a conta! Você possui listas de presentes associadas." + 
-                                                                "\nExclua estas listas antes de excluir sua conta! \nPressione ENTER para continuar...");
+                                        userView.displayMessage(
+                                                "Erro ao excluir a conta! Você possui listas de presentes associadas." +
+                                                        "\nExclua estas listas antes de excluir sua conta! \nPressione ENTER para continuar...");
                                         System.in.read();
                                     }
                                 }
@@ -94,15 +99,18 @@ public class UserController {
                                 break;
                             default: // Mostra '> Meus dados' novamente
                                 userView.displayMessage("Opção inválida!");
-                                try { Thread.sleep(1000); } catch (InterruptedException e) {}
+                                try {
+                                    Thread.sleep(1000);
+                                } catch (InterruptedException e) {
+                                }
                                 break;
                         }
                     }
-                    break;    
+                    break;
                 case "2": // > Minhas listas
                     giftListController.home();
                     break;
-                case "3": // > Produtos  <- LÓGICA ADICIONADA AQUI
+                case "3": // > Produtos <- LÓGICA ADICIONADA AQUI
                     ProductController productController = new ProductController(this.user);
                     productController.menu();
                     break;
@@ -113,7 +121,10 @@ public class UserController {
                     return false; // Retorna false para o MainController, que encerra o loop de login
                 default: // Mostra '> Inicio' novamente
                     userView.displayMessage("Opção inválida!");
-                    try { Thread.sleep(1000); } catch (InterruptedException e) {}
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                    }
                     break;
             }
 
