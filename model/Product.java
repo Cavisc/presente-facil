@@ -5,7 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
-public class Product implements Generic  {
+public class Product implements Generic {
     private int id;
     private String gtin;
     private String name;
@@ -77,7 +77,7 @@ public class Product implements Generic  {
     public void fromByteArray(byte[] bytes) throws Exception {
         ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
         DataInputStream dis = new DataInputStream(bais);
-        
+
         this.id = dis.readInt();
 
         byte[] baGtin = new byte[13];
