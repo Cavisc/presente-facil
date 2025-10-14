@@ -10,6 +10,28 @@
 
 **Marcos Paulo Miranda Pereira**
 
+## TP2
+
+### 📹 Link para o vídeo de demonstração: [Clique aqui](link pro novo vídeo)
+
+Este projeto foi desenvolvido como parte do Trabalho Prático 2 (TP2) da disciplina de AED3, utilizando conceitos de persistência em arquivos, indexação com Árvore B+, e arquitetura MVC. O trabalho teve como objetivo a implementação da parte de um sistema de gestão de listas de presentes, na qual usuários podem cadastrar produtos e utilizá-los em suas listas de presentes (aniversário, natal, casamento etc.).
+
+O código permite que usuários cadastrem e gerenciem produtos, que podem ser compartilhadas com outras pessoas através de um código GTIN-13. Cada produto pode ser usado em várias listas e cada lista pode possuir vários produtos (N:N). É possível consultar um produto pelo seu código GTIN-13 e ver em quais listas sua e/ou de outros usuários ele é usado.
+
+Classes que foram criadas:
+
+Classe Product: classe que representa a entidade produto. Possui métodos e atributos específicos, além dos métodos estipulados pela interface Generic.
+
+Classe ProductGiftList: classe que representa a cardinalidade N:N de produto e lista de presentes. Possui métodos e atributos específicos, além dos métodos estipulados pela interface Generic.
+
+Classe PairGtinId: classe que representa o par gtin id de um índice secundário indireto usado no CRUD de Product. Possui métodos e atributos específicos, além dos métodos estipulados pela interface GenericExtensibleHashTable.
+
+Classe ProductDAO: classe responsável pelas operações de CRUD da classe Product e seus índices. Se comunica com a classe DAO.
+
+Classe ProductGiftListDAO: classe responsável pelas operações de CRUD da classe ProductGiftList e seus índices. Se comunica com a classe DAO.
+
+## TP1
+
 ### 📹 Link para o vídeo de demonstração: [Clique aqui](https://youtu.be/eIU2AnrRZWI)
 
 Este projeto foi desenvolvido como parte do Trabalho Prático 1 (TP1) da disciplina de AED3, utilizando conceitos de persistência em arquivos, indexação com Árvore B+, e arquitetura MVC. O trabalho teve como objetivo a implementação de um sistema de gestão de listas de presentes, no qual usuários podem se cadastrar e criar listas de sugestões de presentes para diferentes ocasiões (aniversário, natal, casamento etc.).
@@ -38,7 +60,7 @@ Interface Generic: interface genérica com alguns métodos que serão usados nos
 
 Classe User: classe que representa a entidade usuário. Possui métodos e atributos específicos, além dos métodos estipulados pela interface Generic. Se comunica com a classe Encryption.
 
-Classe GiftList: classe que representa a entidade lista de presentes. Possui métodos e atributos específicos, além dos métodos estipulados pela interface Generic. Se comunica com a classe Encryption.
+Classe GiftList: classe que representa a entidade lista de presentes. Possui métodos e atributos específicos, além dos métodos estipulados pela interface Generic. Se comunica com a classe NanoID.
 
 Classe BPlusTree: classe que presenta a árvore B+. Código criado pelo professor Marcos Kutova.
 
