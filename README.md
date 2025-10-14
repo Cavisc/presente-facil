@@ -22,13 +22,27 @@ Classes que foram criadas:
 
 Classe Product: classe que representa a entidade produto. Possui métodos e atributos específicos, além dos métodos estipulados pela interface Generic.
 
-Classe ProductGiftList: classe que representa a cardinalidade N:N de produto e lista de presentes. Possui métodos e atributos específicos, além dos métodos estipulados pela interface Generic.
+Classe ProductList: classe que representa a cardinalidade N:N de produto e lista de presentes. Possui métodos e atributos específicos, além dos métodos estipulados pela interface Generic.
 
-Classe PairGtinId: classe que representa o par gtin id de um índice secundário indireto usado no CRUD de Product. Possui métodos e atributos específicos, além dos métodos estipulados pela interface GenericExtensibleHashTable.
+Classe PairGtin13Id: classe que representa o par gtin id de um índice secundário indireto usado no CRUD de Product. Possui métodos e atributos específicos, além dos métodos estipulados pela interface GenericExtensibleHashTable.
 
 Classe ProductDAO: classe responsável pelas operações de CRUD da classe Product e seus índices. Se comunica com a classe DAO.
 
-Classe ProductGiftListDAO: classe responsável pelas operações de CRUD da classe ProductGiftList e seus índices. Se comunica com a classe DAO.
+Classe ProductListDAO: classe responsável pelas operações de CRUD da classe ProductList e seus índices. Se comunica com a classe DAO.
+
+Classe ProductController: é responsável pela gerência dos fluxos de Product. Faz comunicação com ProductDAO, Product, ProductView, ProductList e ProductListDAO.
+
+Classe ProductView: essa classe tem a função de mostrar e receber as informações usadas em fluxos de leitura, alteração e exclusão do Product e ProdcutList, além de alguns menus. Se comunica com a classe InputScanner.
+
+- Há um CRUD de produtos (que estende a classe ArquivoIndexado, acrescentando Tabelas Hash Extensíveis e Árvores B+ como índices diretos e indiretos conforme necessidade) que funciona corretamente? SIM
+- Há um CRUD da entidade de associação ListaProduto (que estende a classe ArquivoIndexado, acrescentando Tabelas Hash Extensíveis e Árvores B+ como índices diretos e indiretos conforme necessidade) que funciona corretamente? SIM
+- A visão de produtos está corretamente implementada e permite consultas as listas em que o produto aparece (apenas quantidade no caso de lista de outras pessoas)? SIM
+- A visão de listas funciona corretamente e permite a gestão dos produtos na lista? SIM
+- A integridade do relacionamento entre listas e produtos está mantida em todas as operações? SIM
+- O trabalho compila corretamente? SIM
+- O trabalho está completo e funcionando sem erros de execução? SIM
+- O trabalho é original e não a cópia de um trabalho de outro grupo? SIM
+
 
 ## TP1
 
