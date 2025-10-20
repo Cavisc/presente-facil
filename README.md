@@ -12,7 +12,7 @@
 
 ## TP2
 
-### 📹 Link para o vídeo de demonstração: [Clique aqui](link pro novo vídeo)
+### 📹 Link para o vídeo de demonstração: [Clique aqui](https://youtu.be/2OLQLJTdwI8)
 
 Este projeto foi desenvolvido como parte do Trabalho Prático 2 (TP2) da disciplina de AED3, utilizando conceitos de persistência em arquivos, indexação com Árvore B+, e arquitetura MVC. O trabalho teve como objetivo a implementação da parte de um sistema de gestão de listas de presentes, na qual usuários podem cadastrar produtos e utilizá-los em suas listas de presentes (aniversário, natal, casamento etc.).
 
