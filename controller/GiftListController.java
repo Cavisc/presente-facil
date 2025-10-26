@@ -108,7 +108,24 @@ public class GiftListController {
                     manageProductsInList(selectedGiftList);
                     break;
                 case "2": // > Editar lista
-                    // Sua lógica de edição de lista
+                    GiftListView.displayHeader();
+                    giftListView.displayBreadcrumb(" > " + selectedGiftList.getName() + " > Editar lista");
+
+                    String newName = giftListView.displayGiftListInputName();
+                    String newDescription = giftListView.displayGiftListInputDescription();
+                    LocalDate newLimitDate = giftListView.displayGiftListInputLimitDate();
+
+                    GiftList updateGiftList = new GiftList(selectedGiftList.getId(), userId, newName, newDescription, newLimitDate);
+                    if (this.giftListDAO.update(updateGiftList)) {
+                        selectedGiftList = updateGiftList;
+
+                        GiftListView.displayHeader();
+                        giftListView.displayBreadcrumb(" > " + selectedGiftList.getName() + " > Editar lista");
+
+                        giftListView.displayMessage("Lista atualizada com sucesso! \nPressione ENTER para continuar...");
+                        System.in.read();
+                    }
+
                     break;
                 case "3": // > Excluir lista
                     String confirmation = giftListView.displayConfirmationToDeleteGiftList(selectedGiftList.getName());
