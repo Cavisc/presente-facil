@@ -161,7 +161,7 @@ public class GiftListController {
     private void manageProductsInList(GiftList giftList) throws Exception {
         boolean running = true;
         while (running) {
-            giftListView.displayHeader();
+            GiftListView.displayHeader();
             giftListView.displayBreadcrumb("Início > Minhas Listas > " + giftList.getName() + " > Produtos");
 
             List<ProductList> associations = productListDAO.readByListId(giftList.getId());
@@ -211,7 +211,7 @@ public class GiftListController {
                 return;
             }
 
-            giftListView.displayHeader();
+            GiftListView.displayHeader();
             giftListView.displayBreadcrumb("... > Produtos > " + product.getName());
             giftListView.displayProductInListDetails(product, association.getQuantity(), association.getObservations());
             String option = giftListView.displayProductInListDetailsMenu();
@@ -260,7 +260,7 @@ public class GiftListController {
     private void addProductToList(GiftList giftList) throws Exception {
         boolean running = true;
         while (running) {
-            giftListView.displayHeader();
+            GiftListView.displayHeader();
             giftListView.displayBreadcrumb("... > Produtos > Acrescentar produto");
             String option = giftListView.displayAddProductToListMenu();
 
