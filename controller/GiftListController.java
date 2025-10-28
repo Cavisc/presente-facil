@@ -21,6 +21,7 @@ public class GiftListController {
     private GiftListDAO giftListDAO;
     private GiftList[] giftLists;
     private GiftListView giftListView;
+    private ProductView productView;
 
     // --- NOVOS DAOs ADICIONADOS ---
     private ProductDAO productDAO;
@@ -31,6 +32,7 @@ public class GiftListController {
         this.giftListDAO = new GiftListDAO();
         this.giftLists = new GiftList[0];
         this.giftListView = new GiftListView();
+        this.productView = new ProductView();
 
         // --- INICIALIZAÇÃO DOS NOVOS DAOs ---
         this.productDAO = new ProductDAO();
@@ -43,7 +45,7 @@ public class GiftListController {
         // Loop principal que mostra a lista de listas
         while (!option.equals("R")) {
             GiftListView.displayHeader();
-            giftListView.displayBreadcrumb(" > Minhas Listas");
+            giftListView.displayBreadcrumb("");
 
             giftLists = giftListDAO.readByUserIdTheName(userId);
 
@@ -61,7 +63,7 @@ public class GiftListController {
             switch (option) {
                 case "N": // Nova lista
                     GiftListView.displayHeader();
-                    giftListView.displayBreadcrumb(" > Minhas Listas > Nova lista");
+                    giftListView.displayBreadcrumb(" > Nova lista");
 
                     String name = giftListView.displayGiftListInputName();
                     String description = giftListView.displayGiftListInputDescription();
@@ -101,7 +103,7 @@ public class GiftListController {
         String option = "";
         while (!option.equals("R")) {
             GiftListView.displayHeader();
-            giftListView.displayBreadcrumb(" > Minhas Listas > " + selectedGiftList.getName());
+            giftListView.displayBreadcrumb(" > " + selectedGiftList.getName());
 
             option = giftListView.displayGiftListDetailsMenu(selectedGiftList);
 
@@ -164,7 +166,7 @@ public class GiftListController {
         boolean running = true;
         while (running) {
             GiftListView.displayHeader();
-            giftListView.displayBreadcrumb("Início > Minhas Listas > " + giftList.getName() + " > Produtos");
+            giftListView.displayBreadcrumb(" > " + giftList.getName() + " > Produtos");
 
             List<ProductList> associations = productListDAO.readByListId(giftList.getId());
             List<ProductInListInfo> productInfos = new ArrayList<>();
@@ -188,7 +190,7 @@ public class GiftListController {
                     try {
                         int index = Integer.parseInt(option) - 1;
                         if (index >= 0 && index < associations.size()) {
-                            productInListMenu(associations.get(index));
+                            productInListMenu(associations.get(index), giftList);
                         } else {
                             giftListView.displayMessage("Opção inválida!");
                             Thread.sleep(1000);
@@ -202,7 +204,7 @@ public class GiftListController {
         }
     }
 
-    private void productInListMenu(ProductList association) throws Exception {
+    private void productInListMenu(ProductList association, GiftList giftList) throws Exception {
         boolean running = true;
         while (running) {
             Product product = productDAO.read(association.getIdProduct());
@@ -214,7 +216,7 @@ public class GiftListController {
             }
 
             GiftListView.displayHeader();
-            giftListView.displayBreadcrumb("... > Produtos > " + product.getName());
+            giftListView.displayBreadcrumb(" > " + giftList.getName() + " > Produtos > " + product.getName());
             giftListView.displayProductInListDetails(product, association.getQuantity(), association.getObservations());
             String option = giftListView.displayProductInListDetailsMenu();
 
@@ -263,12 +265,12 @@ public class GiftListController {
         boolean running = true;
         while (running) {
             GiftListView.displayHeader();
-            giftListView.displayBreadcrumb("... > Produtos > Acrescentar produto");
+            giftListView.displayBreadcrumb(" > " + giftList.getName() +  " > Produtos > Acrescentar produto");
             String option = giftListView.displayAddProductToListMenu();
 
             switch (option) {
                 case "1": // Buscar por GTIN
-                    String gtin = new ProductView().promptForGtin();
+                    String gtin = productView.promptForGtin();
                     Product p = productDAO.readByGtin13(gtin);
                     if (p != null && p.isActive()) {
                         confirmAndCreateAssociation(giftList, p);
@@ -278,9 +280,7 @@ public class GiftListController {
                     }
                     break;
                 case "2": // Listar todos
-                    // Aqui entraria a mesma lógica de paginação do ProductController
-                    giftListView.displayMessage("Funcionalidade de listar para adicionar ainda não implementada.");
-                    Thread.sleep(1500);
+                    listAllProducts(giftList);
                     break;
                 case "R":
                     running = false;
@@ -335,6 +335,7 @@ public class GiftListController {
             if (option.length() == 10) {
                 GiftList giftList = giftListDAO.readByNanoId(option);
                 UserDAO userDAO = new UserDAO();
+                ProductListDAO productListDAO = new ProductListDAO();
                 
                 if (giftList != null) {
                     User giftListOwner = userDAO.read(giftList.getUserId());
@@ -344,8 +345,59 @@ public class GiftListController {
                     // CORREÇÃO: Chamando o novo método de exibição
                     giftListView.displayFoundGiftListDetails(giftList, giftListOwner.getName());
 
-                    giftListView.displayMessage("\nPressione ENTER para continuar...");
-                    System.in.read();
+                    List<ProductList> productLists = productListDAO.readByListId(giftList.getId());
+                    List<Product> products = new ArrayList<>();
+
+                    for (ProductList pl : productLists) {
+                        Product p = productDAO.read(pl.getIdProduct());
+                        if (p != null && p.isActive()) {
+                            products.add(p);
+                        }
+                    }
+
+                    int currentPage = 1;
+                    int totalPages = (int) Math.ceil((double) products.size() / 10.0);
+                    boolean running = true;
+
+                    while(running) {
+                        int start = (currentPage - 1) * 10;
+                        int end = Math.min(start + 10, products.size());
+                        List<Product> pageProducts = products.subList(start, end);
+
+                        String choice = productView.displayAllProducts(pageProducts, currentPage, totalPages);
+
+                        switch(choice) {
+                            case "A":
+                                if (currentPage > 1) currentPage--;
+                                break;
+                            case "P":
+                                if (currentPage < totalPages) currentPage++;
+                                break;
+                            case "R":
+                                running = false;
+                                break;
+                            default:
+                                try {
+                                    int productIndex = Integer.parseInt(choice) - 1;
+                                    if (productIndex >= 0 && productIndex < pageProducts.size()) {
+                                        Product selectedProduct = pageProducts.get(productIndex);
+                                        productDetailsMenu(selectedProduct, giftList.getName());
+                                    } else {
+                                        productView.displayMessage("Opção inválida!");
+                                        try { Thread.sleep(1000); } catch (InterruptedException e) {}
+                                    }
+                                } catch (NumberFormatException e) {
+                                    productView.displayMessage("Opção inválida!");
+                                    try { Thread.sleep(1000); } catch (InterruptedException ie) {}
+                                }
+                                break;
+                        }
+
+                        GiftListView.displayHeader();
+                        giftListView.displayBreadcrumbFind(" > " + giftList.getName());
+
+                        giftListView.displayFoundGiftListDetails(giftList, giftListOwner.getName());
+                    }
                 } else {
                     giftListView.displayMessage("Lista com o código informado não encontrada.");
                     Thread.sleep(2000);
@@ -355,6 +407,81 @@ public class GiftListController {
             GiftListView.displayHeader();
             giftListView.displayBreadcrumbFind("");
             option = giftListView.displayGiftListInputShareableCode();
+        }
+    }
+
+    private void productDetailsMenu(Product product, String giftListName) throws Exception {
+        boolean running = true;
+        while(running) {        
+            productView.displayProductDetailsUneditable(product, giftListName);
+            String option = productView.displayProductDetailUneditableMenu();
+            
+            switch(option) {
+                case "R":
+                    running = false;
+                    break;
+                default:
+                    productView.displayMessage("Opção inválida!");
+                    try { Thread.sleep(1000); } catch (InterruptedException e) {}
+                    break;
+            }
+        }
+    }
+
+    private void listAllProducts(GiftList giftList) {
+        try {
+            List<Product> allProducts = productDAO.readAll();
+            if (allProducts.isEmpty()) {
+                productView.displayMessage("Nenhum produto cadastrado.");
+                try { Thread.sleep(2000); } catch (InterruptedException e) {}
+                return;
+            }
+
+            int currentPage = 1;
+            int totalPages = (int) Math.ceil((double) allProducts.size() / 10.0);
+            boolean running = true;
+
+            while(running) {
+                productView.displayHeader();
+                giftListView.displayBreadcrumb(" > " + giftList.getName() + " > Produtos > Acrescentar produto > Listagem");
+                
+                int start = (currentPage - 1) * 10;
+                int end = Math.min(start + 10, allProducts.size());
+                List<Product> pageProducts = allProducts.subList(start, end);
+
+                String choice = productView.displayAllProducts(pageProducts, currentPage, totalPages);
+
+                switch(choice) {
+                    case "A":
+                        if (currentPage > 1) currentPage--;
+                        break;
+                    case "P":
+                        if (currentPage < totalPages) currentPage++;
+                        break;
+                    case "R":
+                        running = false;
+                        break;
+                    default:
+                        try {
+                            int productIndex = Integer.parseInt(choice) - 1;
+                            if (productIndex >= 0 && productIndex < pageProducts.size()) {
+                                Product selectedProduct = pageProducts.get(productIndex);
+                                confirmAndCreateAssociation(giftList, selectedProduct);
+                            } else {
+                                productView.displayMessage("Opção inválida!");
+                                try { Thread.sleep(1000); } catch (InterruptedException e) {}
+                            }
+                        } catch (NumberFormatException e) {
+                            productView.displayMessage("Opção inválida!");
+                            try { Thread.sleep(1000); } catch (InterruptedException ie) {}
+                        }
+                        break;
+                }
+            }
+
+        } catch (Exception e) {
+            productView.displayMessage("\nERRO: Falha ao listar os produtos do banco de dados: " + e.getMessage());
+            try { Thread.sleep(3000); } catch (InterruptedException ie) {}
         }
     }
 }

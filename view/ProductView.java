@@ -63,6 +63,15 @@ public class ProductView {
         
         System.out.println("\nAparece também em mais " + otherListsCount + " listas de outras pessoas.\n");
     }
+
+    public void displayProductDetailsUneditable(Product product, String giftListName) {
+        displayHeader();
+        displayBreadcrumb("Início > Procurar lista > " + giftListName + " > " + product.getName());
+        
+        System.out.println("NOME.......: " + product.getName());
+        System.out.println("GTIN-13....: " + product.getGtin13());
+        System.out.println("DESCRIÇÃO..: " + product.getDescription());
+    }
     
     public String displayProductDetailsMenu(boolean isActive) { /* ... (sem alterações) ... */
         System.out.println("(1) Alterar os dados do produto");
@@ -71,6 +80,12 @@ public class ProductView {
         } else {
             System.out.println("(2) Reativar o produto");
         }
+        System.out.println("\n(R) Retornar ao menu anterior\n");
+        System.out.print("Opção: ");
+        return InputScanner.getScanner().nextLine().toUpperCase();
+    }
+
+    public String displayProductDetailUneditableMenu() {
         System.out.println("\n(R) Retornar ao menu anterior\n");
         System.out.print("Opção: ");
         return InputScanner.getScanner().nextLine().toUpperCase();
@@ -87,7 +102,6 @@ public class ProductView {
         System.out.print("Digite uma Descrição para o produto: ");
         return InputScanner.getScanner().nextLine();
     }
-    // Adicione estes métodos dentro da classe ProductView
 
     public String promptForNewGtin(String oldGtin) {
         System.out.println("GTIN-13 atual: " + oldGtin);
