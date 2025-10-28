@@ -36,9 +36,6 @@ public class ProductView {
             String status = p.isActive() ? "" : " (INATIVADO)";
             System.out.println("(" + (i + 1) + ") " + p.getName() + status);
         }
-        for (int i = products.size(); i < 10; i++) {
-            System.out.println("(" + (i + 1) + ") ...");
-        }
         System.out.println("\n(A) Página anterior");
         System.out.println("(P) Próxima página\n");
         System.out.println("(R) Retornar ao menu anterior\n");
