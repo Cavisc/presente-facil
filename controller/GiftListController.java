@@ -7,9 +7,11 @@ import java.util.List;
 import model.GiftList;
 import model.Product;
 import model.ProductList;
+import model.User;
 import model.dao.GiftListDAO;
 import model.dao.ProductDAO;
 import model.dao.ProductListDAO;
+import model.dao.UserDAO;
 import view.GiftListView;
 import view.ProductInListInfo;
 import view.ProductView; // Importação necessária
@@ -332,13 +334,15 @@ public class GiftListController {
         while (!option.toUpperCase().equals("R")) {
             if (option.length() == 10) {
                 GiftList giftList = giftListDAO.readByNanoId(option);
-
+                UserDAO userDAO = new UserDAO();
+                
                 if (giftList != null) {
+                    User giftListOwner = userDAO.read(giftList.getUserId());
                     GiftListView.displayHeader();
                     giftListView.displayBreadcrumbFind(" > " + giftList.getName());
 
                     // CORREÇÃO: Chamando o novo método de exibição
-                    giftListView.displayFoundGiftListDetails(giftList);
+                    giftListView.displayFoundGiftListDetails(giftList, giftListOwner.getName());
 
                     giftListView.displayMessage("\nPressione ENTER para continuar...");
                     System.in.read();

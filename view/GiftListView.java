@@ -145,7 +145,7 @@ public class GiftListView {
         return InputScanner.getScanner().nextLine().toUpperCase();
     }
 
-    public void displayFoundGiftListDetails(GiftList list) {
+    public void displayFoundGiftListDetails(GiftList list, String ownerName) {
         System.out.println("CÓDIGO.....: " + list.getShareableCode());
         System.out.println("NOME.......: " + list.getName());
         System.out.println("DESCRIÇÃO..: " + list.getDescription());
@@ -153,5 +153,6 @@ public class GiftListView {
         if (list.getLimitDate() != null) {
             System.out.println("DATA LIMITE: " + DateFormatter.formatDateToString(list.getLimitDate()));
         }
+        System.out.println("CRIADOR....: " + ownerName);
     }
 }
