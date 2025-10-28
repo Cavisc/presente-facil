@@ -282,6 +282,9 @@ public class GiftListController {
                 case "2": // Listar todos
                     listAllProducts(giftList);
                     break;
+                case "3": // Buscar por nome
+                    searchByName(giftList);
+                    break;
                 case "R":
                     running = false;
                     break;
@@ -482,6 +485,67 @@ public class GiftListController {
         } catch (Exception e) {
             productView.displayMessage("\nERRO: Falha ao listar os produtos do banco de dados: " + e.getMessage());
             try { Thread.sleep(3000); } catch (InterruptedException ie) {}
+        }
+    }
+
+    private void searchByName(GiftList giftList) {
+        GiftListView.displayHeader();
+        giftListView.displayBreadcrumb(" > " + giftList.getName() +  " > Produtos > Acrescentar produto > Buscar por nome");
+        String name = productView.promptForName();
+
+        try {
+            List<Product> products = productDAO.readByName(name);
+
+            if (products.isEmpty()) {
+                productView.displayMessage("\nNenhum produto encontrado com o nome: " + name);
+                try { Thread.sleep(2000); } catch (InterruptedException e) {}
+                return;
+            }
+            
+            int currentPage = 1;
+            int totalPages = (int) Math.ceil((double) products.size() / 10.0);
+            boolean running = true;
+
+            while(running) {
+                productView.displayHeader();
+                giftListView.displayBreadcrumb(" > " + giftList.getName() +  " > Produtos > Acrescentar produto > Buscar por nome > Listagem");
+                
+                int start = (currentPage - 1) * 10;
+                int end = Math.min(start + 10, products.size());
+                List<Product> pageProducts = products.subList(start, end);
+
+                String choice = productView.displayAllProducts(pageProducts, currentPage, totalPages);
+
+                switch(choice) {
+                    case "A":
+                        if (currentPage > 1) currentPage--;
+                        break;
+                    case "P":
+                        if (currentPage < totalPages) currentPage++;
+                        break;
+                    case "R":
+                        running = false;
+                        break;
+                    default:
+                        try {
+                            int productIndex = Integer.parseInt(choice) - 1;
+                            if (productIndex >= 0 && productIndex < pageProducts.size()) {
+                                Product selectedProduct = pageProducts.get(productIndex);
+                                confirmAndCreateAssociation(giftList, selectedProduct);
+                            } else {
+                                productView.displayMessage("Opção inválida!");
+                                try { Thread.sleep(1000); } catch (InterruptedException e) {}
+                            }
+                        } catch (NumberFormatException e) {
+                            productView.displayMessage("Opção inválida!");
+                            try { Thread.sleep(1000); } catch (InterruptedException ie) {}
+                        }
+                        break;
+                }
+            }
+        } catch (Exception e) {
+            productView.displayMessage("\nERRO ao buscar produto: " + e.getMessage());
+            try { Thread.sleep(2000); } catch (InterruptedException ie) {}
         }
     }
 }

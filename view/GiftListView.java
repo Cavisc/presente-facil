@@ -124,7 +124,8 @@ public class GiftListView {
 
     public String displayAddProductToListMenu() {
         System.out.println("(1) Buscar produtos por GTIN");
-        System.out.println("(2) Listar todos os produtos\n");
+        System.out.println("(2) Listar todos os produtos");
+        System.out.println("(3) Buscar produtos por nome\n");
         System.out.println("(R) Retornar ao menu anterior\n");
         System.out.print("Opção: ");
         return InputScanner.getScanner().nextLine().toUpperCase();
