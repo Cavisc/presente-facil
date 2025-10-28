@@ -23,7 +23,8 @@ public class ProductView {
     public String displayProductMenu() { /* ... (sem alterações) ... */
         System.out.println("(1) Buscar produtos por GTIN");
         System.out.println("(2) Listar todos os produtos");
-        System.out.println("(3) Cadastrar um novo produto\n");
+        System.out.println("(3) Cadastrar um novo produto");
+        System.out.println("(4) Buscar produtos por nome\n");
         System.out.println("(R) Retornar ao menu anterior\n");
         System.out.print("Opção: ");
         return InputScanner.getScanner().nextLine().toUpperCase();
@@ -82,7 +83,7 @@ public class ProductView {
         return InputScanner.getScanner().nextLine();
     }
     public String promptForName() { /* ... (sem alterações) ... */
-        System.out.print("Digite o Nome do produto: ");
+        System.out.print("Digite o nome do produto: ");
         return InputScanner.getScanner().nextLine();
     }
     public String promptForDescription() { /* ... (sem alterações) ... */
