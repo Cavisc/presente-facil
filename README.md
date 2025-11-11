@@ -10,6 +10,32 @@
 
 **Marcos Paulo Miranda Pereira**
 
+## TP3
+
+### 📹 Link para o vídeo de demonstração: [Clique aqui](https://youtu.be/uwIY-WOQ39A)
+
+Este projeto foi desenvolvido como parte do Trabalho Prático 3 (TP3) da disciplina de AED3, utilizando conceitos de persistência em arquivos, indexação com Árvore B+, e arquitetura MVC. O trabalho teve como objetivo a implementação da parte de um sistema de gestão de listas de presentes, na qual usuários podem pesquisar produtos por seus nomes e utilizá-los em suas listas de presentes ou ver em quais listas ele está presente.
+
+A funcionalidade de busca permite que os usuários localizem produtos por nome. Para isso, foi implementada uma lista invertida, assegurando que os resultados retornados sejam os mais relevantes para o termo pesquisado.
+
+Classes que foram criadas:
+
+Classe InvertedListElement: classe que representa o elemento onde as informações de cada termo são armazenadas para serem usadas nos cálculos da lista invertida.
+
+Classe InvertedList: classe que representa a lista invertida. Código criado pelo professor Marcos Kutova.
+
+Classe InvertedListCalculator: classe responsável por calcular o TF, IDF e TFxIDF.
+
+Classe TextProcessor: Classe usada na normalização dos termos para a lista invertida.
+
+- O índice invertido com os termos dos nomes dos produtos foi criado usando a classe ListaInvertida? SIM
+- É possível buscar produtos por palavras no menu de manutenção de produtos? SIM
+- É possível buscar produtos por palavras na hora de acrescentá-los às listas dos usuários? SIM
+- O trabalho compila corretamente? SIM
+- O trabalho está completo e funcionando sem erros de execução? SIM
+- O trabalho é original e não a cópia de um trabalho de outro grupo? SIM
+
+
 ## TP2
 
 ### 📹 Link para o vídeo de demonstração: [Clique aqui](https://youtu.be/2OLQLJTdwI8)
